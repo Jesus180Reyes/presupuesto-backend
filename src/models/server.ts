@@ -55,10 +55,10 @@ export class Server {
     this.app.use(helmet());
     this.app.use(compression());
     this.app.use(express.urlencoded({ extended: true }));
-    const storage = multer.diskStorage({ destination: '/uploads/' });
+    const storage = multer.diskStorage({ destination: './uploads/' });
     const upload = multer({
       storage: storage,
-      dest: '/uploads/',
+      dest: './uploads/',
       limits: { fileSize: 5 * 1024 * 1024 }, // Establece el límite de tamaño del archivo a 1 MB
     });
     this.app.use(upload.any());
