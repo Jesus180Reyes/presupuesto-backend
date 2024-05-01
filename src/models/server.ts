@@ -59,7 +59,6 @@ export class Server {
     const upload = multer({
       storage: storage,
       dest: '/uploads/',
-      preservePath:true,
       limits: { fileSize: 5 * 1024 * 1024 }, // Establece el límite de tamaño del archivo a 1 MB
     });
     this.app.use(upload.any());
