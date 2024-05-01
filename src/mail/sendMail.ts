@@ -1,9 +1,9 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import nodemailer, { Transporter } from 'nodemailer';
-import handlebars from 'handlebars';
-import fs from 'fs';
-import path from 'path';
-import SMTPTransport from 'nodemailer/lib/smtp-transport';
+import nodemailer, { Transporter } from "nodemailer";
+import handlebars from "handlebars";
+import fs from "fs";
+import path from "path";
+import SMTPTransport from "nodemailer/lib/smtp-transport";
 
 export class SendMail {
   private smtpTransport: Transporter<SMTPTransport.SentMessageInfo>;
@@ -13,7 +13,7 @@ export class SendMail {
   constructor(template: string) {
     this.template = template;
     this.smtpTransport = nodemailer.createTransport({
-      host: 'smtp.gmail.com',
+      host: "smtp.gmail.com",
       port: 465,
       secure: true, // Use `true` for port 465, `false` for all other ports
       auth: {
@@ -23,7 +23,7 @@ export class SendMail {
     });
     this.emailTemplateProvider = fs.readFileSync(
       path.join(__dirname, `../templates/handlebars/${this.template}.hbs`),
-      'utf8',
+      "utf8",
     );
   }
 
@@ -56,10 +56,10 @@ export class SendMail {
           reject(error);
           console.error(error);
         } else {
-          console.log('message', 'Successfully sent email.');
+          console.log("message", "Successfully sent email.");
           resolve({
             status: true,
-            message: 'Successfully sent email.',
+            message: "Successfully sent email.",
             response,
           });
         }
