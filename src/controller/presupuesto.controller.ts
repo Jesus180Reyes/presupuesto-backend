@@ -10,7 +10,6 @@ export class Controller {
   crearReporte = async (req: Request, res: Response) => {
     try {
       const { body } = req;
-    console.log(body)
     const header = {
       columns: await this.createPDFHeader(
         `Informe de Gastos para usuario: ${body.to}`,
