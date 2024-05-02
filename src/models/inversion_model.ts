@@ -1,9 +1,9 @@
-import { DataTypes, Model } from 'sequelize';
-import { ConnectionDB } from '../db/dbConecction';
+import { DataTypes, Model } from "sequelize";
+import { ConnectionDB } from "../db/dbConecction";
 
 export const InversionesModel = () => {
   const model = ConnectionDB.db.define<Model<iInversiones>>(
-    'inversiones',
+    "inversiones",
     {
       id: {
         type: DataTypes.NUMBER,
@@ -21,7 +21,7 @@ export const InversionesModel = () => {
         type: DataTypes.DATE,
       },
     },
-    { tableName: 'inversiones' },
+    { tableName: "inversiones" },
   );
   return model;
 };

@@ -1,10 +1,10 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { Request, Response } from 'express';
-import { InversionesModel } from '../models/inversion_model';
-import { SendMail } from '../mail/sendMail';
-import moment from 'moment';
-import pdfMake from 'pdfmake/build/pdfmake';
-import pdfFonts from 'pdfmake/build/vfs_fonts';
+import { Request, Response } from "express";
+import { InversionesModel } from "../models/inversion_model";
+import { SendMail } from "../mail/sendMail";
+import moment from "moment";
+import pdfMake from "pdfmake/build/pdfmake";
+import pdfFonts from "pdfmake/build/vfs_fonts";
 pdfMake.vfs = pdfFonts.pdfMake.vfs;
 export class Controller {
   crearReporte = async (req: Request, res: Response) => {
@@ -19,18 +19,18 @@ export class Controller {
     const options = {
       to: body.to,
       email: body.to,
-      name: 'Jesus',
-      filename: 'Reporte.pdf',
+      name: "Jesus",
+      filename: "Reporte.pdf",
     };
-    const gastos =await InversionesModel().findAll();
-    const totalInvested = await InversionesModel().sum('total')
+    const gastos = await InversionesModel().findAll();
+    const totalInvested = await InversionesModel().sum("total");
     const dataTable = {
       margin: [30, 30, 30, 30],
       columnGap: 10,
       table: {
         headerRows: 1,
-        widths: ['*', '*'],
-        fillColor: '#01595C',
+        widths: ["*", "*"],
+        fillColor: "#01595C",
         layout: {
           defaultBorder: false,
         },
@@ -43,8 +43,8 @@ export class Controller {
       columnGap: 10,
       table: {
         headerRows: 1,
-        widths: ['*', '*'],
-        fillColor: '#01595C',
+        widths: ["*", "*"],
+        fillColor: "#01595C",
         layout: {
           defaultBorder: false,
         },
@@ -53,17 +53,17 @@ export class Controller {
       },
     };
     const pdf: any = {
-      content: [header,receipt,dataTable],
+      content: [header, receipt, dataTable],
     };
     pdfMake.createPdf(pdf).getBuffer(async (data) => {
-      const sendMail = new SendMail('report');
+      const sendMail = new SendMail("report");
 
-      await sendMail.send(options, 'Reporte de Gastos', data);
+      await sendMail.send(options, "Reporte de Gastos", data);
     });
 
     res.json({
       ok: true,
-      msg: 'Reporte Creado Exitosamente',
+      msg: "Reporte Creado Exitosamente",
     });
   };
   getPresupuestos = async (req: Request, res: Response) => {
@@ -92,29 +92,29 @@ export class Controller {
   };
   async createPDFHeader(checkName: string) {
     // const result: any = await this.getImageBase64(logo);
-    const currentDate = moment().format('DD-MM-YYYY');
+    const currentDate = moment().format("DD-MM-YYYY");
     const header = [
       // {
       //   image: `data:image/jpeg;base64,${result}`,
       //   width: 68
       // },
       {
-        width: '65%',
+        width: "65%",
         margin: [15, 20, 0, 0],
         fontSize: 15,
-        color: '#01595C',
+        color: "#01595C",
         text: checkName,
       },
       {
-        width: '10%',
+        width: "10%",
         bold: true,
-        color: '#657685',
+        color: "#657685",
         margin: [0, 20, 0, 0],
-        text: 'Fecha:',
+        text: "Fecha:",
       },
       {
-        width: '20%',
-        color: '#657685',
+        width: "20%",
+        color: "#657685",
         margin: [-5, 20, 0, 0],
         text: currentDate,
       },
@@ -125,24 +125,24 @@ export class Controller {
     // const project: any = await this.getNameProject(checkData.project);
     const data: any = [];
     const border = [true, true, true, true];
-    const borderTitle = ['#01595C', '#01595C', '#FFFFFF', '#01595C'];
-    const borderText = ['#01595C', '#01595C', '#01595C', '#01595C'];
+    const borderTitle = ["#01595C", "#01595C", "#FFFFFF", "#01595C"];
+    const borderText = ["#01595C", "#01595C", "#01595C", "#01595C"];
     signos.forEach((e) => {
       data.push([
         {
           colSpan: 2,
-          text: '',
-          fillColor: '#FFFFFF',
-          color: '#FFFFFF',
+          text: "",
+          fillColor: "#FFFFFF",
+          color: "#FFFFFF",
           fontSize: 12,
           margin: [0, 15], // Agregar margen superior e inferior a la descripción
           opacity: 0,
-          borderColor: ['#FFFFFF', '#FFFFFF', '#FFFFFF', '#FFFFFF'], // Hacer transparentes los bordes izquierdo y derecho
+          borderColor: ["#FFFFFF", "#FFFFFF", "#FFFFFF", "#FFFFFF"], // Hacer transparentes los bordes izquierdo y derecho
         },
         {
-          text: '',
-          fillColor: '#FFFFFF',
-          borderColor: ['#FFFFFF', '#FFFFFF', '#FFFFFF', '#FFFFFF'], // Hacer transparentes los bordes izquierdo y derecho
+          text: "",
+          fillColor: "#FFFFFF",
+          borderColor: ["#FFFFFF", "#FFFFFF", "#FFFFFF", "#FFFFFF"], // Hacer transparentes los bordes izquierdo y derecho
           margin: [0, 15], // Agregar margen superior e inferior a la descripción
           opacity: 0,
           // borderColor: 'rgba(0, 0, 0, 0)'
@@ -151,28 +151,28 @@ export class Controller {
       data.push([
         {
           colSpan: 2,
-          text: 'Gastos',
-          fillColor: '#01595C',
-          color: '#FFFFFF',
+          text: "Gastos",
+          fillColor: "#01595C",
+          color: "#FFFFFF",
           fontSize: 12,
         },
         {
-          text: '',
-          fillColor: '#01595C',
+          text: "",
+          fillColor: "#01595C",
         },
       ]);
 
       data.push([
         {
-          text: 'Nombre:',
-          color: '#657685',
+          text: "Nombre:",
+          color: "#657685",
           bold: true,
           border: border,
           borderColor: borderTitle,
         },
         {
           text: e?.nombre,
-          color: '#657685',
+          color: "#657685",
           border: border,
           borderColor: borderText,
         },
@@ -180,36 +180,34 @@ export class Controller {
 
       data.push([
         {
-          text: 'Total Gastado:',
-          color: '#657685',
+          text: "Total Gastado:",
+          color: "#657685",
           bold: true,
           border: border,
           borderColor: borderTitle,
         },
         {
           text: `${e?.total.toLocaleString()} Lps`,
-          color: '#657685',
+          color: "#657685",
           border: border,
           borderColor: borderText,
         },
       ]);
       data.push([
         {
-          text: 'Fecha de creacion:',
-          color: '#657685',
+          text: "Fecha de creacion:",
+          color: "#657685",
           bold: true,
           border: border,
           borderColor: borderTitle,
         },
         {
-          text: moment(e.fecha).format('DD/MM/YYYY'),
-          color: '#657685',
+          text: moment(e.fecha).format("DD/MM/YYYY"),
+          color: "#657685",
           border: border,
           borderColor: borderText,
         },
       ]);
-      
-
     });
 
     return data;
@@ -217,33 +215,33 @@ export class Controller {
 
   async createReceipt(data: number) {
     const border = [true, true, true, true];
-    const borderTitle = ['#01595C', '#01595C', '#FFFFFF', '#01595C'];
-    const borderText = ['#01595C', '#01595C', '#01595C', '#01595C'];
+    const borderTitle = ["#01595C", "#01595C", "#FFFFFF", "#01595C"];
+    const borderText = ["#01595C", "#01595C", "#01595C", "#01595C"];
     const receipt = [
       [
         {
           colSpan: 2,
-          text: 'Monto Total Gastado',
-          fillColor: '#01595C',
-          color: '#FFFFFF',
+          text: "Monto Total Gastado",
+          fillColor: "#01595C",
+          color: "#FFFFFF",
           fontSize: 12,
         },
         {
-          text: '',
-          fillColor: '#01595C',
+          text: "",
+          fillColor: "#01595C",
         },
       ],
       [
         {
-          text: 'Total:',
-          color: '#657685',
+          text: "Total:",
+          color: "#657685",
           bold: true,
           border: border,
           borderColor: borderTitle,
         },
         {
           text: `${data.toLocaleString()} Lps`,
-          color: '#657685',
+          color: "#657685",
           border: border,
           borderColor: borderText,
         },
@@ -251,5 +249,4 @@ export class Controller {
     ];
     return receipt;
   }
-
 }
