@@ -5,6 +5,8 @@ import { SendMail } from '../mail/sendMail';
 import moment from 'moment';
 import pdfMake from 'pdfmake/build/pdfmake';
 import pdfFonts from 'pdfmake/build/vfs_fonts';
+import { NotificationServices } from '../services/notification_service';
+import { TokenModel } from '../models/token_model';
 pdfMake.vfs = pdfFonts.pdfMake.vfs;
 export class Controller {
   crearReporte = async (req: Request, res: Response) => {
@@ -86,6 +88,16 @@ export class Controller {
     try {
       const { body } = req;
       const inversion = await InversionesModel().create(body);
+    const notification = new NotificationServices();
+    const tokens = await TokenModel().findAll();
+    const fcm_tokens = tokens.map(e => e.dataValues.fcm_token) 
+    await notification.sendPush({
+         token: fcm_tokens ?? [],
+         notification: {
+           title: 'Nuevo Gasto Creado',
+           body: `Se ha creado un nuevo gasto: "${body.nombre}" `,
+         }
+       });
       res.json({
         ok: true,
         inversion,
