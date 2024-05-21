@@ -90,10 +90,10 @@ export class NotificationServices {
           };
 
       const response = isArray
-        ? await sendMessages(message).catch(error => {
+        ? await sendMessages(message).catch((error) => {
             clearUnusableTokens(error, data.token);
           })
-        : await sendMessage(message).catch(error => {
+        : await sendMessage(message).catch((error) => {
             clearUnusableTokens(error, data.token);
           });
       return response;
@@ -114,25 +114,25 @@ export class NotificationServices {
         },
       });
     } catch (e) {
-        console.error(e)
+      console.error(e);
     }
 
     //store the new notification info
     for (const userId of data.usersId) {
       // * Guardar notificacion en BD
-    //   await NotificationsModel().create(
-    //     {
-    //       users_id: userId,
-    //       enterprise_proyects_id: data.projectId,
-    //       checks_id: data.checkId,
-    //       frecuency_id: data.frequencyId,
-    //       description: data.description,
-    //       title: data.title,
-    //       is_view: data.isView,
-    //       module: data.module,
-    //     },
-    //     { transaction }
-    //   );
+      //   await NotificationsModel().create(
+      //     {
+      //       users_id: userId,
+      //       enterprise_proyects_id: data.projectId,
+      //       checks_id: data.checkId,
+      //       frecuency_id: data.frequencyId,
+      //       description: data.description,
+      //       title: data.title,
+      //       is_view: data.isView,
+      //       module: data.module,
+      //     },
+      //     { transaction }
+      //   );
     }
   }
 }
@@ -151,7 +151,7 @@ async function clearUnusableTokens(error: any, tokens: any) {
         // notificationUtils.deleteFCMToken(tok).catch((_: any) => {});
       }
     } else {
-    //   notificationUtils.deleteFCMToken(tokens).catch((_: any) => {});
+      //   notificationUtils.deleteFCMToken(tokens).catch((_: any) => {});
     }
   }
 }

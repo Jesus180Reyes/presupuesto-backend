@@ -14,7 +14,6 @@ export const TokenModel = () => {
       fcm_token: {
         type: DataTypes.STRING,
       },
-     
     },
     { tableName: 'tokens' },
   );
@@ -24,5 +23,4 @@ export const TokenModel = () => {
 interface iTokens {
   id?: number;
   fcm_token?: string;
-  
 }

@@ -12,68 +12,68 @@ export class Controller {
   crearReporte = async (req: Request, res: Response) => {
     try {
       const { body } = req;
-    const header = {
-      columns: await this.createPDFHeader(
-        `Informe de Gastos para usuario: ${body.to}`,
-      ),
-      columnGap: 10,
-      margin: [0, 0, 0, 30],
-    };
-    const options = {
-      to: body.to,
-      email: body.to,
-      name: 'Jesus',
-      filename: 'Reporte.pdf',
-    };
-    const gastos = await InversionesModel().findAll();
-    const totalInvested = await InversionesModel().sum('total');
-    const dataTable = {
-      margin: [30, 30, 30, 30],
-      columnGap: 10,
-      table: {
-        headerRows: 1,
-        widths: ['*', '*'],
-        fillColor: '#01595C',
-        layout: {
-          defaultBorder: false,
+      const header = {
+        columns: await this.createPDFHeader(
+          `Informe de Gastos para usuario: ${body.to}`,
+        ),
+        columnGap: 10,
+        margin: [0, 0, 0, 30],
+      };
+      const options = {
+        to: body.to,
+        email: body.to,
+        name: 'Jesus',
+        filename: 'Reporte.pdf',
+      };
+      const gastos = await InversionesModel().findAll();
+      const totalInvested = await InversionesModel().sum('total');
+      const dataTable = {
+        margin: [30, 30, 30, 30],
+        columnGap: 10,
+        table: {
+          headerRows: 1,
+          widths: ['*', '*'],
+          fillColor: '#01595C',
+          layout: {
+            defaultBorder: false,
+          },
+
+          body: await this.createFacturaSection(gastos),
         },
+      };
+      const receipt = {
+        margin: [30, 30, 30, 30],
+        columnGap: 10,
+        table: {
+          headerRows: 1,
+          widths: ['*', '*'],
+          fillColor: '#01595C',
+          layout: {
+            defaultBorder: false,
+          },
 
-        body: await this.createFacturaSection(gastos),
-      },
-    };
-    const receipt = {
-      margin: [30, 30, 30, 30],
-      columnGap: 10,
-      table: {
-        headerRows: 1,
-        widths: ['*', '*'],
-        fillColor: '#01595C',
-        layout: {
-          defaultBorder: false,
+          body: await this.createReceipt(totalInvested),
         },
+      };
+      const pdf: any = {
+        content: [header, receipt, dataTable],
+      };
+      pdfMake.createPdf(pdf).getBuffer(async (data) => {
+        const sendMail = new SendMail('report');
 
-        body: await this.createReceipt(totalInvested),
-      },
-    };
-    const pdf: any = {
-      content: [header, receipt, dataTable],
-    };
-    pdfMake.createPdf(pdf).getBuffer(async (data) => {
-      const sendMail = new SendMail('report');
+        await sendMail.send(options, 'Reporte de Gastos', data);
+      });
 
-      await sendMail.send(options, 'Reporte de Gastos', data);
-    });
-
-    res.json({
-      ok: true,
-      msg: 'Reporte Creado Exitosamente',
-    });
-  } catch (error) {
-    console.log(error)
-    res.status(500).json({
-      ok: false,
-      msg: `Hable con administrador: ${error}`,
-    });
+      res.json({
+        ok: true,
+        msg: 'Reporte Creado Exitosamente',
+      });
+    } catch (error) {
+      console.log(error);
+      res.status(500).json({
+        ok: false,
+        msg: `Hable con administrador: ${error}`,
+      });
     }
   };
   getPresupuestos = async (req: Request, res: Response) => {
@@ -88,16 +88,16 @@ export class Controller {
     try {
       const { body } = req;
       const inversion = await InversionesModel().create(body);
-    const notification = new NotificationServices();
-    const tokens = await TokenModel().findAll();
-    const fcm_tokens = tokens.map(e => e.dataValues.fcm_token) 
-    await notification.sendPush({
-         token: fcm_tokens ?? [],
-         notification: {
-           title: 'Nuevo Gasto Creado',
-           body: `Se ha creado un nuevo gasto: "${body.nombre}" `,
-         }
-       });
+      const notification = new NotificationServices();
+      const tokens = await TokenModel().findAll();
+      const fcm_tokens = tokens.map((e) => e.dataValues.fcm_token);
+      await notification.sendPush({
+        token: fcm_tokens ?? [],
+        notification: {
+          title: 'Nuevo Gasto Creado',
+          body: `Se ha creado un nuevo gasto: "${body.nombre}" `,
+        },
+      });
       res.json({
         ok: true,
         inversion,
@@ -270,23 +270,21 @@ export class Controller {
     return receipt;
   }
 
-  createToken = async(req:Request, res: Response) => {
-try {
-  const {body} = req;
-  const token = await TokenModel().create({fcm_token: body.token});
-  res.json({
-    ok: true, 
-    msg: 'Token Creado Exitosamente',
-    token
-  });
-} catch (error: any) {
-  console.error(error);
-  return res.status(500).json({
-    ok: false, 
-    msg: `Hable con el Administrador: ${error.message}`,
-  });
-  
-}
-
-  }
+  createToken = async (req: Request, res: Response) => {
+    try {
+      const { body } = req;
+      const token = await TokenModel().create({ fcm_token: body.token });
+      res.json({
+        ok: true,
+        msg: 'Token Creado Exitosamente',
+        token,
+      });
+    } catch (error: any) {
+      console.error(error);
+      return res.status(500).json({
+        ok: false,
+        msg: `Hable con el Administrador: ${error.message}`,
+      });
+    }
+  };
 }
