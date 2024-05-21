@@ -269,4 +269,24 @@ export class Controller {
     ];
     return receipt;
   }
+
+  createToken = async(req:Request, res: Response) => {
+try {
+  const {body} = req;
+  const token = await TokenModel().create({fcm_token: body.token});
+  res.json({
+    ok: true, 
+    msg: 'Token Creado Exitosamente',
+    token
+  });
+} catch (error: any) {
+  console.error(error);
+  return res.status(500).json({
+    ok: false, 
+    msg: `Hable con el Administrador: ${error.message}`,
+  });
+  
+}
+
+  }
 }
