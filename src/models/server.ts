@@ -13,7 +13,7 @@ import { CronJob } from 'cron';
 import { ReportFrecuency } from '../cron/report_frecuency';
 config();
 export class Server {
-private reportFrecuency = new ReportFrecuency();
+  private reportFrecuency = new ReportFrecuency();
   public paths = {
     presupuesto: '/api/presupuesto',
   };
@@ -92,7 +92,6 @@ private reportFrecuency = new ReportFrecuency();
     });
     cronJob1.start();
   }
-
 
   listen() {
     const log = console.log;
