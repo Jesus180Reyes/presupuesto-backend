@@ -9,8 +9,11 @@ import compression from 'compression';
 import { config } from 'dotenv';
 import presupuesto from '../routes/presupuesto.route';
 import { ConnectionDB } from '../db/dbConecction';
+import { CronJob } from 'cron';
+import { ReportFrecuency } from '../cron/report_frecuency';
 config();
 export class Server {
+private reportFrecuency = new ReportFrecuency();
   public paths = {
     presupuesto: '/api/presupuesto',
   };
@@ -29,6 +32,8 @@ export class Server {
 
     // Rutas de mi aplicación
     this.routes();
+    // Montar Cron
+    this.mountCronOperations();
   }
 
   async conectarDB() {
@@ -75,6 +80,19 @@ export class Server {
   routes() {
     this.app.use(this.paths.presupuesto, presupuesto);
   }
+
+  private mountCronOperations(): void {
+    const cronJob1 = CronJob.from({
+      cronTime: '0 12 * * *',
+      // cronTime: '*/2 * * * *',
+      onTick: () => {
+        this.reportFrecuency.reportFrecuency();
+      },
+      timeZone: 'America/Tegucigalpa',
+    });
+    cronJob1.start();
+  }
+
 
   listen() {
     const log = console.log;
