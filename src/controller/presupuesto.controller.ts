@@ -56,9 +56,8 @@ export class Controller {
         },
       };
       const pdf: any = {
-        content: [header, receipt, dataTable, ],
+        content: [header, receipt, dataTable],
         footer: this.createFooter,
-
       };
       pdfMake.createPdf(pdf).getBuffer(async (data) => {
         const sendMail = new SendMail('report');
@@ -112,19 +111,22 @@ export class Controller {
       });
     }
   };
-  createFooter(currentPage:number, pageCount:number) {
+  createFooter(currentPage: number, pageCount: number) {
     return {
       columns: [
         // { text: '', alignment: 'center' }, // Espacio vacío a la izquierda
-        { text: `${currentPage}/${pageCount}`, alignment: 'center' ,style: {
-          fontSize: 8,
-          italics: true,
-        }},
+        {
+          text: `${currentPage}/${pageCount}`,
+          alignment: 'center',
+          style: {
+            fontSize: 8,
+            italics: true,
+          },
+        },
         // { text: '', alignment: 'center' }  // Espacio vacío a la derecha
-    ],
-    margin: [0, 0, 0, 0]
-
-    } 
+      ],
+      margin: [0, 0, 0, 0],
+    };
   }
   async createPDFHeader(checkName: string) {
     // const result: any = await this.getImageBase64(logo);
