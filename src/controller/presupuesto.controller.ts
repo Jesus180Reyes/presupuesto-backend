@@ -7,6 +7,7 @@ import pdfMake from 'pdfmake/build/pdfmake';
 import pdfFonts from 'pdfmake/build/vfs_fonts';
 import { NotificationServices } from '../services/notification_service';
 import { TokenModel } from '../models/token_model';
+import { ReportEmailSended } from '../models/report_email_sended';
 pdfMake.vfs = pdfFonts.pdfMake.vfs;
 export class Controller {
   crearReporte = async (req: Request, res: Response) => {
@@ -64,6 +65,7 @@ export class Controller {
 
         await sendMail.send(options, 'Reporte de Gastos', data);
       });
+      await ReportEmailSended().create({user_email: body.to});
 
       res.json({
         ok: true,

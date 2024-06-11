@@ -5,6 +5,7 @@ import moment from 'moment';
 import { InversionesModel } from '../models/inversion_model';
 import pdfMake from 'pdfmake/build/pdfmake';
 import pdfFonts from 'pdfmake/build/vfs_fonts';
+import { ReportEmailSended } from '../models/report_email_sended';
 pdfMake.vfs = pdfFonts.pdfMake.vfs;
 export class ReportFrecuency {
   reportFrecuency = async (): Promise<
@@ -63,6 +64,7 @@ export class ReportFrecuency {
 
         await sendMail.send(options, 'Reporte de Gastos', data);
       });
+    await ReportEmailSended().create({user_email: item});
     }
 
     return null;
