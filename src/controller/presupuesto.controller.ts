@@ -65,7 +65,7 @@ export class Controller {
 
         await sendMail.send(options, 'Reporte de Gastos', data);
       });
-      await ReportEmailSended().create({user_email: body.to});
+      await ReportEmailSended().create({ user_email: body.to });
 
       res.json({
         ok: true,

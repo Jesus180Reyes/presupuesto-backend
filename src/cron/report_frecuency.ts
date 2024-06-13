@@ -64,7 +64,7 @@ export class ReportFrecuency {
 
         await sendMail.send(options, 'Reporte de Gastos', data);
       });
-    await ReportEmailSended().create({user_email: item});
+      await ReportEmailSended().create({ user_email: item });
     }
 
     return null;
